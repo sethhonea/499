@@ -3,8 +3,9 @@
 import API
 import urllib.parse
 import json
+import csv
 
-
+# GET 10 ACTIVE MEMBERS
 def get_10_active_members():
     params = {'$filter': 'member eq true',
               '$top': '10',
@@ -13,7 +14,16 @@ def get_10_active_members():
     print(request_url)
     return api.execute_request(request_url).Contacts
 
+#GET 1 Active Member 
+def get_1_active_member():
+    params = {'$filter': 'member eq true',
+              '$top': '1',
+              '$async': 'false'}
+    request_url = contactsUrl + '?' + urllib.parse.urlencode(params)
+    print(request_url)
+    return api.execute_request(request_url).Contacts
 
+#PRINT CONTACT INFO
 def print_contact_info(contact):
     print('Contact details for ' + contact.DisplayName + ', ' + contact.Email)
     print('Main info:')
@@ -27,13 +37,26 @@ def print_contact_info(contact):
             print('\t\t' + field.FieldName + ':' + repr(field.Value))
 
 
+#EXPORT CONTACT INFO
+def export_contact_info(contacts):
+   
+    with open('exported_contact_info.csv', 'w', newline='') as csvfile:
+        fieldnames = ['ID', 'First Name', 'Last Name', 'Email']
+        thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        thewriter.writeheader()
+        for contact in contacts:
+            thewriter.writerow({'ID':contact.Id, 'First Name':contact.FirstName, 
+            'Last Name':contact.LastName, 'Email':contact.Email})
+
+
+# CREATE A CONTACT
 def create_contact(email, name):
     data = {
         'Email': email,
         'FirstName': name}
     return api.execute_request(contactsUrl, api_request_object=data, method='POST')
 
-
+# ARCHIVE A CONTACT
 def archive_contact(contact_id):
     data = {
         'Id': contact_id,
@@ -56,9 +79,13 @@ print(account.PrimaryDomainName)
 contactsUrl = next(res for res in account.Resources if res.Name == 'Contacts').Url
 
 # get top 10 active members and print their details
+#contacts = get_10_active_members()
+#for contact in contacts:
+#    print_contact_info(contact)
+
+## export contact info of members
 contacts = get_10_active_members()
-for contact in contacts:
-    print_contact_info(contact)
+export_contact_info(contacts)
 
 # # create new contact
 # new_copntact = create_contact('some_email1@invaliddomain.org', 'John Doe')
