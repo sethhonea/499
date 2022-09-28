@@ -17,12 +17,20 @@ class contact():
 
 # GET 10 ACTIVE MEMBERS
 def get_10_active_members():
-    params = {'$filter': 'member eq true',
+    params = {'$filter': 'archived eq false',
               '$top': '10',
               '$async': 'false'}
     request_url = contactsUrl + '?' + urllib.parse.urlencode(params)
     print(request_url)
     return api.execute_request(request_url).Contacts
+
+def get_archived_members():
+    params = {'$filter': 'archived eq true ',
+              '$top': '10',
+              '$async': 'false'}
+    request_url = contactsUrl + '?' + urllib.parse.urlencode(params)
+    print(request_url)
+    return api.execute_request(request_url).Contacts    
 
 # GET 1 Active Member 
 def get_1_active_member():
@@ -237,6 +245,13 @@ def import_data():
             except:
                 print(f"Contact with email {newContact.email} already exists.")
 
+def print_archive_member(member):                
+    print('\tID: ' + str(member.Id))
+    print('\tURL: ' + str(member.Url))
+    print('\tFirst name: ' + member.FirstName)
+    print('\tLast name: ' + member.LastName)
+    print('\tArchived: ' + str(member.FieldValues.pop(0).Value))
+
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
 # params in line below are API key and clinet secret
 api = API.WaApiClient("gc7fl5u5rt", "t3haoauwug3tm91h4cu44m6odi6skr")
@@ -253,9 +268,9 @@ invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').U
 donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
 ## GET TOP 10 ACTIVE MEMBERS and print their details ## (works)
-# contacts = get_10_active_members()
-# for contact in contacts:
-#     print_contact_info(contact)
+#contacts = get_10_active_members()
+#for contact in contacts:
+#    print_contact_info(contact)
 
 ## GET 1 ACTIVE MEMBER (made for testing) ## (works)
 #contacts = get_1_active_member()
@@ -312,3 +327,10 @@ for donation in donations:
     print('** BEGIN DONATION INFO **')
     print_donation_info(donation)
     print('** END DONATION INFO **')
+
+## GET AND PRINT ARCHIVED MEMBERS 
+archived_members = get_archived_members()
+for member in archived_members:
+    print('** BEGIN ARCHIVED MEMBER INFO**')   
+    print_archive_member(member)
+    print('** END ARCHIVED MEMBER INFO **')
