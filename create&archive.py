@@ -6,6 +6,8 @@ import urllib.parse
 import json
 import csv
 
+from .export import print_contact_info
+
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
 # params in line below are API key and clinet secret
 api = API.WaApiClient("gc7fl5u5rt", "t3haoauwug3tm91h4cu44m6odi6skr")
@@ -60,31 +62,18 @@ def archive_contact(contact_id):
     return api.execute_request(contactsUrl + str(contact_id), api_request_object=data, method='PUT')
 
 
-# IMPORT A CONTACT
-def import_contact(contact):    
-    data = {
-        'Email': contact.email,
-        'FirstName': contact.firstName,
-        'LastName' : contact.lastName,
-        'ID' : contact.id,
-        
-        }
-    return api.execute_request(contactsUrl, api_request_object=data, method='POST')
 
 
-# IMPORT ALL CONTACT DATA    
-def import_data():
-    with open('test_exported_contact_info.csv', newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader: 
-            id = row['ID']
-            firstName = row['First Name']
-            lastName = row['Last Name']
-            email = row['Email']
-            newContact = contact(id, firstName, lastName, email)
-            print(newContact.id, newContact.firstName, newContact.lastName, newContact.email)
-            try:
-                import_contact(newContact)
-                print(f"Imported contact with email {newContact.email} to database.")
-            except:
-                print(f"Contact with email {newContact.email} already exists.")
+## CREATE NEW CONTACT ## (works)
+new_contact = create_contact('some_email1@invaliddomain.org', 'John Doe')
+
+#adds test contact from above to db
+#Note: if run code multiple times, will throw error because email already in use
+# will take care of this in future
+add_new_contact = add_contact(new_contact.Id)
+print("New contact added: Info below")
+
+
+## FINALLY ARCHIVE IT ##
+#archived_contact = archive_contact(new_copntact.Id)
+#print_contact_info(archived_contact)

@@ -28,3 +28,33 @@ class contact():
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
+
+        
+# IMPORT A CONTACT
+def import_contact(contact):    
+    data = {
+        'Email': contact.email,
+        'FirstName': contact.firstName,
+        'LastName' : contact.lastName,
+        'ID' : contact.id,
+        
+        }
+    return api.execute_request(contactsUrl, api_request_object=data, method='POST')
+
+
+# IMPORT ALL CONTACT DATA    
+def import_data():
+    with open('test_exported_contact_info.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader: 
+            id = row['ID']
+            firstName = row['First Name']
+            lastName = row['Last Name']
+            email = row['Email']
+            newContact = contact(id, firstName, lastName, email)
+            print(newContact.id, newContact.firstName, newContact.lastName, newContact.email)
+            try:
+                import_contact(newContact)
+                print(f"Imported contact with email {newContact.email} to database.")
+            except:
+                print(f"Contact with email {newContact.email} already exists.")

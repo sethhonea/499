@@ -1,0 +1,2 @@
+Id,Value,DocumentDate,Contact,CreatedDate,CreatedBy,IsPaid
+77259937,1.0,2022-09-30T03:06:36+00:00,"{""Id"": 66020498, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66020498"", ""Name"": ""Honea, Seth""}",2022-09-27T03:06:36,"{""Id"": 66133802, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66133802""}",False

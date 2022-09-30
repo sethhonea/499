@@ -58,9 +58,19 @@ def get_events():
     print(request_url)
     return api.execute_request(request_url).Events      
 
+ # GET EVENTS  --> not currently working
+# def get_archived_events():
+#     params = {'$filter': 'RegistrationEnabled eq true',
+#             '$filter': 'archived eq true',
+#               '$async': 'false'}
+#     request_url = eventsUrl + '?' + urllib.parse.urlencode(params)
+#     print(request_url)
+#     return api.execute_request(request_url).Events        
+
 # GET INVOICES
 def get_invoices():
-    params = {'$unpaidOnly': 'true'}
+    params = {'$unpaidOnly': 'true',
+              '$top': '100'}
     request_url = invoicesUrl + '?' + urllib.parse.urlencode(params)
     print(request_url)
     return api.execute_request(request_url)
@@ -68,7 +78,7 @@ def get_invoices():
 # GET DONATIONS --- IN OTHER FUNCTIONS WE HAVE BEEN ABLE TO REMOVE THE 'TOP' PARAM TO RETRIEVE ALL, 
 #                   HOW WILL THAT WORK HERE?
 def get_donations():
-    params = {'$top': '1'}
+    params = {'$top': '100'}
     request_url = donationsUrl + '?' + urllib.parse.urlencode(params)
     print(request_url)
     return api.execute_request(request_url)
@@ -116,6 +126,7 @@ def print_event_info(event):
     print('Event Start Date: ' + str(event.StartDate))
     print('Event End Date: ' + str(event.EndDate))
     print('Event Location: ' + str(event.Location))
+    print('Event type:' + str(event.EventType))
     
 
 # PRINT CONTACT INFO
@@ -141,16 +152,16 @@ def print_contact_info(contact):
         print('\tTerms of Use Accepted: ' + str(contact.TermsOfUseAccepted))
         ## for some reason we have to pop these get the values
         ## may need to do further research on this for report
-        #print('\tField Values: ')
-        #print('\t\tArchived: ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tDonor: ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tEvent Registrant: ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tMember ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tSuspended Member ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tEvent Announcements ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tMember emails and newsletters ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tEmail delivery disabled ' + str(contact.FieldValues.pop(0)))
-        #print('\t\tReceiving emails disabled ' + str(contact.FieldValues.pop(0)))
+        print('\tField Values: ')
+        print('\t\tArchived: ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tDonor: ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tEvent Registrant: ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tMember ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tSuspended Member ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tEvent Announcements ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tMember emails and newsletters ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tEmail delivery disabled ' + str(contact.FieldValues.pop(0).Value))
+        print('\t\tReceiving emails disabled ' + str(contact.FieldValues.pop(0).Value))
         
         print('--------------------------------------')
         print('\tAll contact fields where value is NOT "none":')
@@ -170,7 +181,7 @@ def print_contact_info(contact):
         print('-----------------------------------------------------------------------------------------------')
     # end "print_contact_info()"
     except:
-        print("An error occured printing fields for ", contact.DisplayName, ". A field may have been empty or null and unable to print properly.")
+        print("An error occured printing fields for ", contact.DisplayName)
 
 
 def print_archive_member(member):                
@@ -202,33 +213,115 @@ def get_contact_field_values():
 #----------------------------------------------------------------------------------------------------
 
 # EXPORT CONTACT INFO
-def export_contact_info(contacts):
-   
-    with open('exported_contact_info.csv', 'w', newline='') as csvfile:
-        fieldnames = ['ID', 'First Name', 'Last Name', 'Email']
+def export_contact_info(contacts, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = ['DisplayName', 'Id', 'Url', 'FirstName', 'LastName', 'Organization',
+        'Email', 'ProfileLastUpdated', 'MembershipLevel', 'Status', 'IsAccountAdministrator',
+        'TermsOfUseAccepted', 'Archived', 'Donor', 'Event registrant', 'Member', 'Suspended member',
+        'Event announcements', 'Member emails and newsletters', 'Email delivery disabled', 
+        'Receiving emails disabled', 
+        # from all contact fields where value is NOT none
+        'Balance', 'Total donated', 'Profile last updated',
+        'Profile last updated by', 'Creation date', 'Last login date', 'Administrator role',
+        'Notes', 'Renew now', '(Office Use)', 'e-Mail', 'Cell Phone', 'Member since', 'Renewal due',
+        'Membership level ID', 'Access to profile by others', 'Level last changed', 
+        'Membership status', 'Membership enabled', 'Privacy Policy Consent', 'Code of Conduct Consent',
+        'Addess in Paris / ile de France', 'City', 'Postal code in FRANCE', '2nd email address',
+        'Hometown', 'Age Range', 'Approximate length of stay in Paris', 'Percentage of time will you physically be in Paris',
+        'Areas in which I am willing to volunteer with AWG.', 'Working in France?', 'Group participation',
+        'Preferred time for activities/meetings', "I'm interested in:",
+        #from all contact fields where value IS none
+        'Registered for specific event', 'Member role', 'Renewal date last changed', 'Bundle ID',
+        'Country', 'Citizenship', 'Dual Citizenship, if applicable', 'Birth Month', 'Arrival Date In Paris',
+        'How did you hear about AWG?', 'Are you fluent in French ?', 'AWG Bag received', 'Friends & Neighbors Group']
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for contact in contacts:
-            thewriter.writerow({'ID':contact.Id, 
-            'First Name':contact.FirstName, 
-            'Last Name':contact.LastName, 
-            'Email':contact.Email
+            try:
+                thewriter.writerow({
+                    'DisplayName': contact.DisplayName , 
+                    'Id': contact.Id, 
+                    'Url': contact.Url, 
+                    'FirstName': contact.FirstName, 
+                    'LastName': contact.LastName, 
+                    'Organization': contact.Organization,
+                    'Email': contact.Email,
+                    'ProfileLastUpdated': contact.ProfileLastUpdated, 
+                    'MembershipLevel': contact.MembershipLevel, 
+                    'Status': contact.Status, 
+                    'IsAccountAdministrator': contact.IsAccountAdministrator,
+                    'TermsOfUseAccepted': contact.TermsOfUseAccepted, 
+                    'Archived': str(contact.FieldValues.pop(0).Value), 
+                    'Donor': str(contact.FieldValues.pop(0).Value), 
+                    'Event registrant': str(contact.FieldValues.pop(0).Value), 
+                    'Member': str(contact.FieldValues.pop(0).Value), 
+                    'Suspended member': str(contact.FieldValues.pop(0).Value),
+                    'Event announcements': str(contact.FieldValues.pop(0).Value), 
+                    'Member emails and newsletters': str(contact.FieldValues.pop(0).Value), 
+                    'Email delivery disabled': str(contact.FieldValues.pop(0).Value), 
+                    'Receiving emails disabled': str(contact.FieldValues.pop(0).Value),
+                    ## figure out how to add the values for rows where value IS none and value is NOT none
+                })
+            except: 
+                print("Unable to export information for ", contact.DisplayName)
+
+def export_event_info(events):
+    with open('exported_event_info.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location']
+        thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        thewriter.writeheader()
+        for event in events:
+            thewriter.writerow({
+                'Id': event.Id, 
+                'Name': event.Name, 
+                'StartDate': event.StartDate, 
+                'EndDate': event.EndDate, 
+                'Location': event.Location
             })
 
+def export_invoice_info(invoices):
+    with open('exported_invoice_info.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Id', 'Value', 'DocumentDate', 'Contact', 
+        'CreatedDate', 'CreatedBy', 'IsPaid']
+        thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        thewriter.writeheader()
+        for invoice in invoices:
+            thewriter.writerow({
+                'Id': invoice.Id, 
+                'Value': invoice.Value, 
+                'DocumentDate': invoice.DocumentDate, 
+                'Contact': invoice.Contact, 
+                'CreatedDate': invoice.CreatedDate, 
+                'CreatedBy': invoice.CreatedBy, 
+                'IsPaid': invoice.IsPaid
+            })
+
+def export_donation_info(donations):
+    with open('exported_donation_info.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName',
+        'PublicComment', 'Organization']
+        thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        thewriter.writeheader()
+        for donation in donations:
+            thewriter.writerow({
+                'Value': donation.Value, 
+                'DonationDate': donation.DonationDate, 
+                'FirstName': donation.FirstName, 
+                'LastName': donation.LastName,
+                'PublicComment': donation.PublicComment, 
+                'Organization': donation.Organization
+            })
 
 # CALLING FUNCTIONS TO RETRIEVE DATA, PRINT DATA, AND/OR EXPORT DATA
 #---------------------------------------------------------------------------------------------------------
 
 ## GET ALL ACTIVE MEMBERS & PRINT THEIR DETAILS ## (works)
-contacts = get_active_members()
-numContacts = 0
-print("***BEGIN CONTACT PRINT***")
-for contact in contacts:
-    print_contact_info(contact)
-    print("Contact number = ", numContacts)
-    numContacts = numContacts + 1
-print("***END CONTACT PRINT***")
-print("NUMBER OF CONTACTS: ", numContacts)
+#contacts = get_active_members()
+#print("***BEGIN CONTACT PRINT***")
+#for contact in contacts:
+#    print_contact_info(contact)
+#print("***END CONTACT PRINT***")
+
 
 
 ## GET 1 ACTIVE MEMBER (made for testing) ## (works)
@@ -246,49 +339,43 @@ print("NUMBER OF CONTACTS: ", numContacts)
 #    print_contact_info(contact)
 
 # EXPORT CONTACT INFO ## (works)
-contacts = get_active_members()
-export_contact_info(contacts)
+members = get_active_members()
+export_contact_info(members, 'exported_members.csv')
 
-## CREATE NEW CONTACT ## (works)
-#new_contact = create_contact('some_email1@invaliddomain.org', 'John Doe')
+# EXPORT ARCHIVED MEMBER INFO - uses same export function as regular members
+archived_members = get_archived_members()
+export_contact_info(archived_members, 'exported_archived_members.csv')
 
-#adds test contact from above to db
-#Note: if run code multiple times, will throw error because email already in use
-# will take care of this in future
-#add_new_contact = add_contact(new_contact.Id)
-#print("New contact added: Info below")
-
-
-## Next: pull info from exported_contact_info.csv and import it into database
-# import_data()
-
-## FINALLY ARCHIVE IT ##
-# archived_contact = archive_contact(new_copntact.Id)
-# print_contact_info(archived_contact)
 
 ## GET AND PRINT EVENTS ## (works)
-# events = get_events()
+events = get_events()
+export_event_info(events)
+
 # for event in events:
 #     print('** BEGIN EVENT INFO **')
 #     print_event_info(event)
 #     print('** END EVENT INFO **')
 
-# ## GET AND PRINT INVOICES ## (works)
-# invoices = get_invoices()
-# for invoice in invoices:
-#     print('** BEGIN INVOICE INFO **')
-#     print_invoice_info(invoice)
-#     print('** END INVOICE INFO **')
-
 # ## GET AND PRINT DONATIONS ## (works)
-# donations = get_donations()
+donations = get_donations()
+export_donation_info(donations)
 # for donation in donations:
 #     print('** BEGIN DONATION INFO **')
 #     print_donation_info(donation)
 #     print('** END DONATION INFO **')
 
+# ## GET AND PRINT INVOICES ## (works)
+invoices = get_invoices()
+export_invoice_info(invoices)
+#for invoice in invoices:
+#    print('** BEGIN INVOICE INFO **')
+#    print_invoice_info(invoice) 
+#    print('** END INVOICE INFO **')
+
+
+
 # ## GET AND PRINT ARCHIVED MEMBERS 
-# archived_members = get_archived_members()
+#archived_members = get_archived_members()
 # for member in archived_members:
 #     print('** BEGIN ARCHIVED MEMBER INFO**')   
 #     print_archive_member(member)
