@@ -220,20 +220,21 @@ def export_contact_info(contacts, filename):
         'TermsOfUseAccepted', 'Archived', 'Donor', 'Event registrant', 'Member', 'Suspended member',
         'Event announcements', 'Member emails and newsletters', 'Email delivery disabled', 
         'Receiving emails disabled', 
-        # from all contact fields where value is NOT none
-        'Balance', 'Total donated', 'Profile last updated',
-        'Profile last updated by', 'Creation date', 'Last login date', 'Administrator role',
-        'Notes', 'Renew now', '(Office Use)', 'e-Mail', 'Cell Phone', 'Member since', 'Renewal due',
-        'Membership level ID', 'Access to profile by others', 'Level last changed', 
-        'Membership status', 'Membership enabled', 'Privacy Policy Consent', 'Code of Conduct Consent',
-        'Addess in Paris / ile de France', 'City', 'Postal code in FRANCE', '2nd email address',
-        'Hometown', 'Age Range', 'Approximate length of stay in Paris', 'Percentage of time will you physically be in Paris',
-        'Areas in which I am willing to volunteer with AWG.', 'Working in France?', 'Group participation',
-        'Preferred time for activities/meetings', "I'm interested in:",
-        #from all contact fields where value IS none
-        'Registered for specific event', 'Member role', 'Renewal date last changed', 'Bundle ID',
-        'Country', 'Citizenship', 'Dual Citizenship, if applicable', 'Birth Month', 'Arrival Date In Paris',
-        'How did you hear about AWG?', 'Are you fluent in French ?', 'AWG Bag received', 'Friends & Neighbors Group']
+        # # from all contact fields where value is NOT none
+        # 'Balance', 'Total donated', 'Profile last updated',
+        # 'Profile last updated by', 'Creation date', 'Last login date', 'Administrator role',
+        # 'Notes', 'Renew now', '(Office Use)', 'e-Mail', 'Cell Phone', 'Member since', 'Renewal due',
+        # 'Membership level ID', 'Access to profile by others', 'Level last changed', 
+        # 'Membership status', 'Membership enabled', 'Privacy Policy Consent', 'Code of Conduct Consent',
+        # 'Addess in Paris / ile de France', 'City', 'Postal code in FRANCE', '2nd email address',
+        # 'Hometown', 'Age Range', 'Approximate length of stay in Paris', 'Percentage of time will you physically be in Paris',
+        # 'Areas in which I am willing to volunteer with AWG.', 'Working in France?', 'Group participation',
+        # 'Preferred time for activities/meetings', "I'm interested in:",
+        # #from all contact fields where value IS none
+        # 'Registered for specific event', 'Member role', 'Renewal date last changed', 'Bundle ID',
+        # 'Country', 'Citizenship', 'Dual Citizenship, if applicable', 'Birth Month', 'Arrival Date In Paris',
+        # 'How did you hear about AWG?', 'Are you fluent in French ?', 'AWG Bag received', 'Friends & Neighbors Group'
+        ]
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for contact in contacts:

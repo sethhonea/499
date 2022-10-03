@@ -37,7 +37,7 @@ def import_contact(contact):
         'FirstName': contact.firstName,
         'LastName' : contact.lastName,
         'ID' : contact.id,
-        
+        # need to add more fields, like membership level, do that here, mirror the export for this
         }
     return api.execute_request(contactsUrl, api_request_object=data, method='POST')
 
