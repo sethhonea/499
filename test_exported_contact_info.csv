@@ -1,14 +1,3 @@
-ID,First Name,Last Name,Email
-66020463,Marwa,Alzokari,ma0080@uah.edu
-66020467,Juliet,Awoyale,joi001@uah.edu
-66020481,Angelica,Babineaux,amb009@uah.edu
-66133802,Admin,Backend,sch0010@uah.edu
-66020490,Carlos,Campos,crc0002@uah.edu
-66226364,Admin,Front-End,cks0015@uah.edu
-66020492,Elizabeth,Geiger,eg004@uah.edu
-66020498,Seth,Honea,seth.honea@gmail.com
-66020518,Payton,Ireland,pi0003@uah.edu
-66020535,Sean,Li,yl0030@uah.edu
-66725966,Test,Test,test@test.com
-66725967,Test2,Test2,Test2@test.com
-66725968,Test3,Test3,Test3@test.com
+DisplayName,Id,Url,FirstName,LastName,Organization,Email,ProfileLastUpdated,MembershipLevel,Status,IsAccountAdministrator,TermsOfUseAccepted,Archived,Donor,Event registrant,Member,Suspended member,Event announcements,Member emails and newsletters,Email delivery disabled,Receiving emails disabled
+"Import, Import",,,Import,Import,,test_import@test_import.com,2022-09-16T16:57:51.867+02:00,"{""Id"": 1434812, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/MembershipLevels/1434812"", ""Name"": ""40 and under""}",Active,False,True,False,False,False,True,False,True,True,False,False
+"Import2, Import2",,,Import2,Import2,,test_import2@test_import2.com,2022-09-16T16:57:52.987+02:00,"{""Id"": 1434816, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/MembershipLevels/1434816"", ""Name"": ""Regular Membership""}",Lapsed,False,False,False,False,False,True,False,True,True,False,False

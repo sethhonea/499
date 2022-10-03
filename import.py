@@ -1,4 +1,5 @@
 
+from distutils.log import error
 from tarfile import NUL
 from typing import OrderedDict
 import API
@@ -22,39 +23,116 @@ invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').U
 donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
 
-class contact():
-    def __init__(self, id, firstName, lastName, email):
-        self.id = id
-        self.firstName = firstName
-        self.lastName = lastName
-        self.email = email
+#DisplayName,Id,Url,FirstName,LastName,Organization,Email,ProfileLastUpdated,MembershipLevel,Status,IsAccountAdministrator,TermsOfUseAccepted,Archived,Donor,Event registrant,Member,Suspended member,Event announcements,Member emails and newsletters,Email delivery disabled,Receiving emails disabled
 
-        
-# IMPORT A CONTACT
-def import_contact(contact):    
-    data = {
-        'Email': contact.email,
-        'FirstName': contact.firstName,
-        'LastName' : contact.lastName,
-        'ID' : contact.id,
-        # need to add more fields, like membership level, do that here, mirror the export for this
-        }
-    return api.execute_request(contactsUrl, api_request_object=data, method='POST')
+class contact():
+    def __init__(self, DisplayName, Id, Url, FirstName, LastName, Organization, Email, 
+    ProfileLastUpdated, MembershipLevel ,Status, IsAccountAdministrator, TermsOfUseAccepted, Archived,
+    Donor, Event_registrant, Member, Suspended_member, Event_announcements, Member_emails_and_newsletters,
+    Email_delivery_disabled, Receiving_emails_disabled):
+        self.DisplayName = DisplayName
+        self.Id = Id 
+        self.Url = Url
+        self.FirstName = FirstName
+        self.LastName = LastName
+        self.Organization = Organization
+        self.Email = Email
+        self.ProfileLastUpdated = ProfileLastUpdated
+        self.MembershipLevel = MembershipLevel
+        self.Status = Status
+        self.IsAccountAdministrator = IsAccountAdministrator
+        self.TermsOfUseAccepted = TermsOfUseAccepted
+        self.Archived = Archived
+        self.Donor = Donor
+        self.Event_registrant = Event_registrant
+        self.Member = Member
+        self.Suspended_member = Suspended_member
+        self.Event_announcements = Event_announcements
+        self.Member_emails_and_newsletters = Member_emails_and_newsletters
+        self.Email_delivery_disabled = Email_delivery_disabled
+        self.Receiving_emails_disabled = Receiving_emails_disabled
+
 
 
 # IMPORT ALL CONTACT DATA    
 def import_data():
     with open('test_exported_contact_info.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
-        for row in reader: 
-            id = row['ID']
-            firstName = row['First Name']
-            lastName = row['Last Name']
-            email = row['Email']
-            newContact = contact(id, firstName, lastName, email)
-            print(newContact.id, newContact.firstName, newContact.lastName, newContact.email)
+        
+        for row in reader:
+            DisplayName = row['DisplayName'],
+            Id = row['Id'],
+            Url = row['Url'],
+            FirstName = row['FirstName'],
+            LastName = row['LastName'],
+            Organization = row['Organization'],
+            Email = row['Email'],
+            ProfileLastUpdated = row['ProfileLastUpdated'],
+            MembershipLevel = row['MembershipLevel'],
+            Status = row['Status'],
+            IsAccountAdministrator = row['IsAccountAdministrator'],
+            TermsOfUseAccepted = row['TermsOfUseAccepted'],
+            Archived = row['Archived'],
+            Donor = row['Donor'],
+            Event_registrant = row['Event registrant'],
+            Member = row['Member'],
+            Suspended_member = row['Suspended member'],
+            Event_announcements = row['Event announcements'],
+            Member_emails_and_newsletters = row['Member emails and newsletters'],
+            Email_delivery_disabled = row['Email delivery disabled'],
+            Receiving_emails_disabled = row['Receiving emails disabled'] 
+            
+            newContact = contact(DisplayName[0], Id[0], Url[0], FirstName[0], LastName[0], Organization[0], Email[0], 
+                                ProfileLastUpdated[0], MembershipLevel[0], Status[0], IsAccountAdministrator[0], TermsOfUseAccepted[0], Archived[0],
+                                Donor[0], Event_registrant[0], Member[0], Suspended_member[0], Event_announcements[0], Member_emails_and_newsletters[0],
+                                Email_delivery_disabled[0], Receiving_emails_disabled[0])
+
+
             try:
-                import_contact(newContact)
-                print(f"Imported contact with email {newContact.email} to database.")
+            
+                create_contact(newContact)
+            except:    
+                print(f"Error occured creating contact: {newContact.DisplayName}.")
+            try:
+                import_contact(newContact)    
             except:
-                print(f"Contact with email {newContact.email} already exists.")
+                print(f"Error occured while importing contact {newContact.DisplayName}.")
+
+
+
+
+# CREATE A CONTACT --- this method was taken from create&archive.py where it was tested and 
+# successfully created a contact
+def create_contact(member: contact):
+    print(member.FirstName, member.LastName, member.Email)
+    data = {
+        'FirstName': f"{member.FirstName}", 
+        # 'LastName': member.LastName, 
+        # 'Organization': member.Organization,
+        'Email': f"{member.Email}",
+        # 'ProfileLastUpdated': member.ProfileLastUpdated, 
+        # 'MembershipLevel': member.MembershipLevel, 
+        # 'Status': member.Status, 
+        # 'IsAccountAdministrator': member.IsAccountAdministrator,
+        # 'TermsOfUseAccepted': member.TermsOfUseAccepted
+        }
+
+    return api.execute_request(contactsUrl, api_request_object=data, method='POST')
+
+
+# IMPORT A CONTACT -- this method was taken from create&archive.py where it 
+# was tested and successfully uploaded/imported a member into the database
+def import_contact(member: contact):
+    contact_id = member.Id
+    data = {
+        'Id': contact_id,
+        'FieldValues': [
+            {
+                'FieldName': 'Member',
+                'Value': 'true'}]
+    }
+    return api.execute_request(contactsUrl + str(contact_id), api_request_object=data, method='PUT')
+
+
+
+import_data()            

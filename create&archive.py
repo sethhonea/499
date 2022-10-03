@@ -6,7 +6,7 @@ import urllib.parse
 import json
 import csv
 
-from .export import print_contact_info
+from export import print_contact_info
 
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
 # params in line below are API key and clinet secret
@@ -65,7 +65,7 @@ def archive_contact(contact_id):
 
 
 ## CREATE NEW CONTACT ## (works)
-new_contact = create_contact('some_email1@invaliddomain.org', 'John Doe')
+new_contact = create_contact('some_email1_JaneDoe@invaliddomain.org', 'Jane Doe')
 
 #adds test contact from above to db
 #Note: if run code multiple times, will throw error because email already in use
