@@ -116,18 +116,37 @@ def print_invoice_info(invoice):
     print('Invoice Contact: ' + str(invoice.Contact))
     print('Invoice Created Date: ' + str(invoice.CreatedDate))
     print('Invoice Created By: ' + str(invoice.CreatedBy))
+    print('Invoice Updated Date: ' + str(invoice.UpdatedDate))
+    print('Invoice Updated By: ' + str(invoice.UpdatedBy))
+    print('Document Number: ' + str(invoice.DocumentNumber))
     print('Invoice Paid: ' + str(invoice.IsPaid))
+    print('Invoice Order Type: ' + str(invoice.OrderType))
+    #print('Invoice Event Registration: ' + str(invoice.EventRegistration))  ## cant print
+    #print('Invoice Order Details: ' + str(invoice.OrderDetails))            ## cant print
+    print('Invoice Memo: ' + str(invoice.Memo))
+    print('Invoice Public Memo: ' + str(invoice.PublicMemo))
+    #print('Invoice Voided Date: ' + str(invoice.VoidedDate))                ## cant print
     
 
 # PRINT EVENT INFO
 def print_event_info(event):
     print('Event ID: ' + str(event.Id))
     print('Event Name: ' + str(event.Name))
+    print('Event type: ' + str(event.EventType))
     print('Event Start Date: ' + str(event.StartDate))
+    print('Event Start Time Specified: ' + str(event.StartTimeSpecified))
     print('Event End Date: ' + str(event.EndDate))
+    print('Event End Time Specified: ' + str(event.EndTimeSpecified))
     print('Event Location: ' + str(event.Location))
-    print('Event type:' + str(event.EventType))
-    
+    print('Event Registration Enabled: ' + str(event.RegistrationEnabled))
+    print('Event Has Enabled Registraion Types: ' + str(event.HasEnabledRegistrationTypes))
+    print('Event Access Level: ' + str(event.AccessLevel))
+    print('Event Tags: ' + str(event.Tags))
+    #print('Event Details: ' + str(event.Details))      ## cant print
+    #print('Event Total Paid:' + str(event.TotalPaid))  ## cant print
+    #print('Event Total Due:' + str(event.TotalDue))    ## cant print
+    #print('Event Sessions:' + str(event.Sessions))     ## cant print
+    #print('Event Count:' + str(event.Count))           ## cant print
 
 # PRINT CONTACT INFO
 def print_contact_info(contact):
@@ -351,11 +370,10 @@ export_contact_info(archived_members, 'exported_archived_members.csv')
 ## GET AND PRINT EVENTS ## (works)
 events = get_events()
 export_event_info(events)
-
-# for event in events:
-#     print('** BEGIN EVENT INFO **')
-#     print_event_info(event)
-#     print('** END EVENT INFO **')
+for event in events:
+    print('** BEGIN EVENT INFO **')
+    print_event_info(event)
+    print('** END EVENT INFO **')
 
 # ## GET AND PRINT DONATIONS ## (works)
 donations = get_donations()
