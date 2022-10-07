@@ -2,6 +2,7 @@
 from distutils.log import error
 from tarfile import NUL
 from typing import OrderedDict
+from datetime import datetime
 import API
 import urllib.parse
 import json
@@ -88,28 +89,36 @@ def import_data():
                                 Email_delivery_disabled[0], Receiving_emails_disabled[0])
 
 
+            #print_member(newContact)            
+
             try:
-            
+                
                 create_contact(newContact)
             except:    
                 print(f"Error occured creating contact: {newContact.DisplayName}.")
-            try:
-                import_contact(newContact)    
-            except:
-                print(f"Error occured while importing contact {newContact.DisplayName}.")
+            # try:
+            #     import_member(newContact)    
+            # except:
+            #     print(f"Error occured while importing contact {newContact.DisplayName}.")
 
 
 
 
 # CREATE A CONTACT --- this method was taken from create&archive.py where it was tested and 
 # successfully created a contact
-def create_contact(member: contact):
-    print(member.FirstName, member.LastName, member.Email)
+def create_contact(member:contact):
+
+    print(member.FirstName)
+    print(member.LastName)
+    print(member.Email)
+    first = member.FirstName
+    last = member.LastName
+    email = member.Email
     data = {
-        'FirstName': f"{member.FirstName}", 
-        # 'LastName': member.LastName, 
-        # 'Organization': member.Organization,
-        'Email': f"{member.Email}",
+        'FirstName': first, 
+        'LastName': last, 
+        'Organization': "",
+        'Email': email
         # 'ProfileLastUpdated': member.ProfileLastUpdated, 
         # 'MembershipLevel': member.MembershipLevel, 
         # 'Status': member.Status, 
@@ -122,7 +131,7 @@ def create_contact(member: contact):
 
 # IMPORT A CONTACT -- this method was taken from create&archive.py where it 
 # was tested and successfully uploaded/imported a member into the database
-def import_contact(member: contact):
+def import_member(member: contact):
     contact_id = member.Id
     data = {
         'Id': contact_id,
@@ -135,4 +144,77 @@ def import_contact(member: contact):
 
 
 
-import_data()            
+# Returns error: Method Now Allowed
+# tried to use datetime object in place of string, but then get error datetime object not JSON serialiazable
+def import_event():
+    #fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location'] <-- from export.py
+    data = {
+        'Id': 7899465, 
+        'Name': "Test Event", 
+        'StartDate': '2022-12-10T00:00:00+01:00',
+        'EndDate': '2022-12-01T00:00:00+01:00', 
+        'Location': 'Huntsville-Test'
+
+    }
+    return api.execute_request(eventsUrl, api_request_object=data, method='PUT')
+
+#Receive same Error 405: Method Not Allowed that receive with import_event()
+def import_invoice():
+    # fieldnames = ['Id', 'Value', 'DocumentDate', 'Contact', 'CreatedDate', 'CreatedBy', 'IsPaid'] <-- from export.py
+    data = {
+        'Id': 999999,
+        'Value': 5.0,
+        'DocumentDate': '2022-09-30T03:06:36+00:00',
+        'Contact': "{""Id"": 66020498, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66020498"", ""Name"": ""Honea, Seth""}",
+        'CreatedDate': '2022-09-27T03:06:36',
+        'CreatedBy' : "{""Id"": 66133802, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66133802""}",
+        'IsPaid' : False
+
+    }
+
+    return api.execute_request(invoicesUrl, api_request_object=data, method='PUT')
+
+
+
+#Receive same Error 405: Method Not Allowed that receive with import_event() and import_invoice()
+def import_donation():
+    # fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName', 'PublicComment', 'Organization']
+    data = {
+        'Value' : 25.00,
+        'DonationDate' : '2022-09-30T03:06:36+00:00',
+        'FirstName' : 'Payton',
+        'LastName' : 'Ireland',
+        'PublicComment' : '',
+        'Organization' : ''
+    }
+
+    return api.execute_request(donationsUrl, api_request_object=data, method='PUT')
+
+def print_member(member: contact):
+    print("Contact info: ")
+    print(member.DisplayName)
+    print(member.Id)
+    print(member.Url)
+    print(member.FirstName)
+    print(member.LastName)
+    print(member.Organization)
+    print(member.Email)
+    print(member.ProfileLastUpdated)
+    print(member.Status)
+    print(member.IsAccountAdministrator)
+    print(member.TermsOfUseAccepted)
+    print(member.Archived)
+    print(member.Donor)
+    print(member.Event_registrant)
+    print(member.Member)
+    print(member.Suspended_member)
+    print(member.Event_announcements)
+    print(member.Member_emails_and_newsletters)
+    print(member.Email_delivery_disabled)
+    print(member.Receiving_emails_disabled)
+
+
+
+import_data()
+
+

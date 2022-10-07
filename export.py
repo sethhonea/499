@@ -23,6 +23,7 @@ api.authenticate_with_contact_credentials("sch0010@uah.edu", "backend")
 accounts = api.execute_request("/v2/accounts")
 account = accounts[0]
 
+
 print(account.PrimaryDomainName)
 
 ## URLS to retrieve data
