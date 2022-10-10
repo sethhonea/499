@@ -1,2 +1,4 @@
-Id,Name,StartDate,EndDate,Location
-4985839,Test Event for API :),2022-12-01T00:00:00+01:00,2022-12-25T00:00:00+01:00,Rocket City
+Id,Name,Type,StartDate,StartTimeSpecified,EndDate,EndTimeSpecified,Location,RegistrationEnabled,HasEnabledRegistrationTypes,AccessLevel,Tags
+4985839,Test Event for API :),Rsvp,2022-12-01T00:00:00+01:00,False,2022-12-25T00:00:00+01:00,False,Rocket City,True,True,Restricted,[]
+4997453,Backend's Event,Rsvp,2022-11-19T07:00:00-10:00,True,2022-11-20T17:00:00-10:00,True,Hawaii,True,True,Restricted,['backend tag']
+4997464,CS Party,Rsvp,2022-11-01T10:00:00+01:00,True,2022-11-02T15:00:00+01:00,True,Paris,True,False,Restricted,['computer science']

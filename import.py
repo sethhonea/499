@@ -2,10 +2,8 @@
 from distutils.log import error
 from tarfile import NUL
 from typing import OrderedDict
-from datetime import datetime
 import API
-import urllib.parse
-import json
+
 import csv
 
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
@@ -144,7 +142,7 @@ def import_member(member: contact):
 
 
 
-# Returns error: Method Now Allowed
+# Returns error: Method Not Allowed
 # tried to use datetime object in place of string, but then get error datetime object not JSON serialiazable
 def import_event():
     #fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location'] <-- from export.py

@@ -23,7 +23,6 @@ api.authenticate_with_contact_credentials("sch0010@uah.edu", "backend")
 accounts = api.execute_request("/v2/accounts")
 account = accounts[0]
 
-
 print(account.PrimaryDomainName)
 
 ## URLS to retrieve data
@@ -101,7 +100,7 @@ def get_donations():
 def print_donation_info(payment):
     print('Donation Value: ' + str(payment.Value))
     print('Donation Date: ' + str(payment.DonationDate))
-    print('Donation made by: ' + str(payment.FirstName) + ' ' + str(payment.LastName))
+    print('Donation Made By: ' + str(payment.FirstName) + ' ' + str(payment.LastName))
     if(payment.PublicComment == ""):
         payment.PublicComment = "NA"
     print('Donation Comments: ' + str(payment.PublicComment))
@@ -117,18 +116,37 @@ def print_invoice_info(invoice):
     print('Invoice Contact: ' + str(invoice.Contact))
     print('Invoice Created Date: ' + str(invoice.CreatedDate))
     print('Invoice Created By: ' + str(invoice.CreatedBy))
-    print('Invoice Paid: ' + str(invoice.IsPaid))
+    print('Invoice Updated Date: ' + str(invoice.UpdatedDate))
+    print('Invoice Updated By: ' + str(invoice.UpdatedBy))
+    print('Document Number: ' + str(invoice.DocumentNumber))
+    print('Invoice Is Paid: ' + str(invoice.IsPaid))
+    print('Invoice Order Type: ' + str(invoice.OrderType))
+    #print('Invoice Event Registration: ' + str(invoice.EventRegistration))  ## cant print
+    #print('Invoice Order Details: ' + str(invoice.OrderDetails))            ## cant print
+    print('Invoice Memo: ' + str(invoice.Memo))
+    print('Invoice Public Memo: ' + str(invoice.PublicMemo))
+    #print('Invoice Voided Date: ' + str(invoice.VoidedDate))                ## cant print
     
 
 # PRINT EVENT INFO
 def print_event_info(event):
     print('Event ID: ' + str(event.Id))
     print('Event Name: ' + str(event.Name))
+    print('Event Type: ' + str(event.EventType))
     print('Event Start Date: ' + str(event.StartDate))
+    print('Event Start Time Specified: ' + str(event.StartTimeSpecified))
     print('Event End Date: ' + str(event.EndDate))
+    print('Event End Time Specified: ' + str(event.EndTimeSpecified))
     print('Event Location: ' + str(event.Location))
-    print('Event type:' + str(event.EventType))
-    
+    print('Event Registration Enabled: ' + str(event.RegistrationEnabled))
+    print('Event Has Enabled Registration Types: ' + str(event.HasEnabledRegistrationTypes))
+    print('Event Access Level: ' + str(event.AccessLevel))
+    print('Event Tags: ' + str(event.Tags))
+    #print('Event Details: ' + str(event.Details))      ## cant print
+    #print('Event Total Paid:' + str(event.TotalPaid))  ## cant print
+    #print('Event Total Due:' + str(event.TotalDue))    ## cant print
+    #print('Event Sessions:' + str(event.Sessions))     ## cant print
+    #print('Event Count:' + str(event.Count))           ## cant print
 
 # PRINT CONTACT INFO
 def print_contact_info(contact):
@@ -269,22 +287,49 @@ def export_contact_info(contacts, filename):
 
 def export_event_info(events):
     with open('exported_event_info.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location']
+        fieldnames = ['Id', 
+                    'Name', 
+                    'Type',
+                    'StartDate', 
+                    'StartTimeSpecified',
+                    'EndDate', 
+                    'EndTimeSpecified',
+                    'Location',
+                    'RegistrationEnabled',
+                    'HasEnabledRegistrationTypes',
+                    'AccessLevel',
+                    'Tags'
+                    ]
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for event in events:
             thewriter.writerow({
                 'Id': event.Id, 
                 'Name': event.Name, 
-                'StartDate': event.StartDate, 
-                'EndDate': event.EndDate, 
-                'Location': event.Location
+                'Type': event.EventType,
+                'StartDate': event.StartDate,
+                'StartTimeSpecified': event.StartTimeSpecified, 
+                'EndDate': event.EndDate,
+                'EndTimeSpecified': event.EndTimeSpecified, 
+                'Location': event.Location,
+                'RegistrationEnabled': event.RegistrationEnabled,
+                'HasEnabledRegistrationTypes': event.HasEnabledRegistrationTypes,
+                'AccessLevel': event.AccessLevel,
+                'Tags': event.Tags
             })
 
 def export_invoice_info(invoices):
     with open('exported_invoice_info.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Id', 'Value', 'DocumentDate', 'Contact', 
-        'CreatedDate', 'CreatedBy', 'IsPaid']
+        fieldnames = ['Id', 
+                    'Value', 
+                    'DocumentDate', 
+                    'Contact', 
+                    'CreatedDate', 
+                    'CreatedBy', 
+                    'IsPaid',
+                    'OrderType',
+                    'Memo',
+                    'PublicMemo']
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for invoice in invoices:
@@ -295,13 +340,20 @@ def export_invoice_info(invoices):
                 'Contact': invoice.Contact, 
                 'CreatedDate': invoice.CreatedDate, 
                 'CreatedBy': invoice.CreatedBy, 
-                'IsPaid': invoice.IsPaid
+                'IsPaid': invoice.IsPaid,
+                'OrderType': invoice.OrderType,
+                'Memo': invoice.Memo,
+                'PublicMemo': invoice.PublicMemo
             })
 
 def export_donation_info(donations):
     with open('exported_donation_info.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName',
-        'PublicComment', 'Organization']
+        fieldnames = ['Value', 
+                    'DonationDate', 
+                    'FirstName', 
+                    'LastName',
+                    'PublicComment', 
+                    'Organization']
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for donation in donations:
@@ -352,7 +404,6 @@ export_contact_info(archived_members, 'exported_archived_members.csv')
 ## GET AND PRINT EVENTS ## (works)
 events = get_events()
 export_event_info(events)
-
 # for event in events:
 #     print('** BEGIN EVENT INFO **')
 #     print_event_info(event)
