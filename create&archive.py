@@ -1,3 +1,8 @@
+# Create and Arichve
+# Not currently being used as part of project.
+# Provides capability to create new member and archive a member. 
+# Date of Last Change
+# 10/17/2022 - P.Ireland - added comment headers
 
 from tarfile import NUL
 from typing import OrderedDict

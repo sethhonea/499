@@ -1,4 +1,9 @@
-#__author__ = 'dsmirnov@wildapricot.com'
+# Export.py
+# Provides ability to export active member data, archived member data, 
+# event data, invoice data, and donation data as separate csv files. 
+#
+# Date of Last Change
+# 10/17/2022 - P.Ireland - added comment headers
 
 from tarfile import NUL
 from typing import OrderedDict

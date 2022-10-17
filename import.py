@@ -1,3 +1,10 @@
+# import.py
+# (Not currently functional)
+# Provides ability to import a member into the database. 
+#
+# Date of Last Change
+# 10/17/2022 - P.Ireland - added comment headers
+
 
 from distutils.log import error
 from tarfile import NUL
