@@ -1,9 +1,9 @@
 # import.py
-# (Not currently functional)
 # Provides ability to import a member into the database. 
 #
 # Date of Last Change
 # 10/17/2022 - P.Ireland - added comment headers
+# 10/19/2022 - P.Ireland - fixed import for member data, will now import members from test_exported_contact_info.csv
 
 
 from distutils.log import error
@@ -29,8 +29,7 @@ invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').U
 donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
 
-#DisplayName,Id,Url,FirstName,LastName,Organization,Email,ProfileLastUpdated,MembershipLevel,Status,IsAccountAdministrator,TermsOfUseAccepted,Archived,Donor,Event registrant,Member,Suspended member,Event announcements,Member emails and newsletters,Email delivery disabled,Receiving emails disabled
-
+#creating contact class with all fields accessed from export
 class contact():
     def __init__(self, DisplayName, Id, Url, FirstName, LastName, Organization, Email, 
     ProfileLastUpdated, MembershipLevel ,Status, IsAccountAdministrator, TermsOfUseAccepted, Archived,
@@ -60,11 +59,13 @@ class contact():
 
 
 
-# IMPORT ALL CONTACT DATA    
-def import_data():
+# import all member data
+def import_member_data():
+    #csv file to read member data from to be imported
     with open('test_exported_contact_info.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         
+        #creating a new contact/member with fields from csv file
         for row in reader:
             DisplayName = row['DisplayName'],
             Id = row['Id'],
@@ -88,42 +89,45 @@ def import_data():
             Email_delivery_disabled = row['Email delivery disabled'],
             Receiving_emails_disabled = row['Receiving emails disabled'] 
             
+            #creating the contact/member
             newContact = contact(DisplayName[0], Id[0], Url[0], FirstName[0], LastName[0], Organization[0], Email[0], 
                                 ProfileLastUpdated[0], MembershipLevel[0], Status[0], IsAccountAdministrator[0], TermsOfUseAccepted[0], Archived[0],
                                 Donor[0], Event_registrant[0], Member[0], Suspended_member[0], Event_announcements[0], Member_emails_and_newsletters[0],
                                 Email_delivery_disabled[0], Receiving_emails_disabled[0])
 
-
-            #print_member(newContact)            
-
+            #try to import the member
             try:
-                
-                create_contact(newContact)
-            except:    
-                print(f"Error occured creating contact: {newContact.DisplayName}.")
-            # try:
-            #     import_member(newContact)    
-            # except:
-            #     print(f"Error occured while importing contact {newContact.DisplayName}.")
+                import_member(newContact)
+            #catch and display any error (most common is email already in use error)    
+            except Exception as error:    
+                print(f"Error occured creating contact: {newContact.DisplayName}. Error: ", error)
+            
 
 
 
 
 # CREATE A CONTACT --- this method was taken from create&archive.py where it was tested and 
 # successfully created a contact
-def create_contact(member:contact):
+def import_member(member:contact):
+    #need to add all of the fields here, looking at SwaggerHub example may not can include all fields that were exported though
+    
+    #Membership level is a dictionary ex: {"Id": 1434812, "Url": "https://api.wildapricot.org/v2/accounts/422750/MembershipLevels/1434812", "Name": "40 and under"}
+    #This is read in as a string when reading from the csv file, so we must take a slice of this string
+    #to return the id number needed below
+    member_level_id = member.MembershipLevel[7:14]
 
-    print(member.FirstName)
-    print(member.LastName)
-    print(member.Email)
-    first = member.FirstName
-    last = member.LastName
-    email = member.Email
+    
     data = {
-        'FirstName': first, 
-        'LastName': last, 
-        'Organization': "",
-        'Email': email
+        'Id' : member.Id,
+        'FirstName': member.FirstName, 
+        'LastName': member.LastName, 
+        'Organization': member.Organization,
+        'Email': member.Email,
+        'MembershipLevel': {
+            "Id" : member_level_id           
+        },
+        'MembershipEnabled': True,                  
+        'Status' : member.Status
         # 'ProfileLastUpdated': member.ProfileLastUpdated, 
         # 'MembershipLevel': member.MembershipLevel, 
         # 'Status': member.Status, 
@@ -133,19 +137,6 @@ def create_contact(member:contact):
 
     return api.execute_request(contactsUrl, api_request_object=data, method='POST')
 
-
-# IMPORT A CONTACT -- this method was taken from create&archive.py where it 
-# was tested and successfully uploaded/imported a member into the database
-def import_member(member: contact):
-    contact_id = member.Id
-    data = {
-        'Id': contact_id,
-        'FieldValues': [
-            {
-                'FieldName': 'Member',
-                'Value': 'true'}]
-    }
-    return api.execute_request(contactsUrl + str(contact_id), api_request_object=data, method='PUT')
 
 
 
@@ -161,7 +152,7 @@ def import_event():
         'Location': 'Huntsville-Test'
 
     }
-    return api.execute_request(eventsUrl, api_request_object=data, method='PUT')
+    return api.execute_request(eventsUrl, api_request_object=data, method='POST')
 
 #Receive same Error 405: Method Not Allowed that receive with import_event()
 def import_invoice():
@@ -177,7 +168,7 @@ def import_invoice():
 
     }
 
-    return api.execute_request(invoicesUrl, api_request_object=data, method='PUT')
+    return api.execute_request(invoicesUrl, api_request_object=data, method='POST')
 
 
 
@@ -193,33 +184,9 @@ def import_donation():
         'Organization' : ''
     }
 
-    return api.execute_request(donationsUrl, api_request_object=data, method='PUT')
-
-def print_member(member: contact):
-    print("Contact info: ")
-    print(member.DisplayName)
-    print(member.Id)
-    print(member.Url)
-    print(member.FirstName)
-    print(member.LastName)
-    print(member.Organization)
-    print(member.Email)
-    print(member.ProfileLastUpdated)
-    print(member.Status)
-    print(member.IsAccountAdministrator)
-    print(member.TermsOfUseAccepted)
-    print(member.Archived)
-    print(member.Donor)
-    print(member.Event_registrant)
-    print(member.Member)
-    print(member.Suspended_member)
-    print(member.Event_announcements)
-    print(member.Member_emails_and_newsletters)
-    print(member.Email_delivery_disabled)
-    print(member.Receiving_emails_disabled)
+    return api.execute_request(donationsUrl, api_request_object=data, method='POST')
 
 
-
-import_data()
+import_member_data()
 
 
