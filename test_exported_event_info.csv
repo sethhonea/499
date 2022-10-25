@@ -1,0 +1,3 @@
+Id,Name,Type,StartDate,StartTimeSpecified,EndDate,EndTimeSpecified,Location,RegistrationEnabled,HasEnabledRegistrationTypes,AccessLevel,Tags
+4997453,Created From BackEnd,Rsvp,2022-11-19T07:00:00-10:00,True,2022-11-20T17:00:00-10:00,True,Hawaii,True,True,Restricted,['backend tag']
+

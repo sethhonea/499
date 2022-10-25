@@ -28,6 +28,8 @@ eventsUrl = next(res for res in account.Resources if res.Name == 'Events').Url
 invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').Url
 donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
+#### Adding this to use in donation import
+paymentsUrl = next(res for res in account.Resources if res.Name == 'Payments').Url 
 
 #creating contact class with all fields accessed from export
 class contact():
@@ -57,7 +59,35 @@ class contact():
         self.Email_delivery_disabled = Email_delivery_disabled
         self.Receiving_emails_disabled = Receiving_emails_disabled
 
+# Creating event clas with all fields accessed from export
+class Event():
+    def __init__(self,id,name,type,start_date,start_specified,
+    end_date,end_specified,location,registration,registeration_types,
+    access_level,tags):
+        self.Id = id
+        self.Name = name
+        self.Type = type
+        self.StartDate = start_date
+        self.StartTimeSpecified = start_specified
+        self.EndDate = end_date
+        self.EndTimeSpecified = end_specified
+        self.Location = location
+        self.RegistrationEnabled = registration
+        self.HasEnabledRegistrationTypes = registeration_types
+        self.AccessLevel = access_level
+        self.Tags = tags
 
+# Creating donation clas with all fields accessed from export
+class Donation():
+    def __init__(self,Value,DonationDate,FirstName,LastName,PublicComment,Organization):
+        self.Value = Value
+        self.DonationDate = DonationDate
+        self.FirstName = FirstName
+        self.LastName = LastName
+        self.PublicComment = PublicComment
+        self.Organization = Organization
+    def get_full_name(self):
+        return self.FirstName + " " + self.LastName
 
 # import all member data
 def import_member_data():
@@ -142,22 +172,68 @@ def import_member(member:contact):
 
 # Returns error: Method Not Allowed
 # tried to use datetime object in place of string, but then get error datetime object not JSON serialiazable
-def import_event():
-    #fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location'] <-- from export.py
-    data = {
-        'Id': 7899465, 
-        'Name': "Test Event", 
-        'StartDate': '2022-12-10T00:00:00+01:00',
-        'EndDate': '2022-12-01T00:00:00+01:00', 
-        'Location': 'Huntsville-Test'
 
+#### The error is because we put Id in new created data
+#### So basicly our querry is wrong
+#### Also the start date needs to be before End Date that makes
+#### another error here
+def import_event(event:Event):
+   #fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location'] <-- from export.py
+    data = {
+        'Name': event.Name, 
+        'EventType':event.Type,
+        'StartDate':event.StartDate,
+        'StartTimeSpecified':event.StartTimeSpecified,
+        'EndDate':event.EndDate,
+        'EndTimeSpecified':event.EndTimeSpecified,
+        'Location':event.Location,
+        'RegistrationEnabled':event.RegistrationEnabled,
+        'Tags':event.Tags,
+        "Details":{
+            "AccessControl":{
+                "AccessLevel":event.AccessLevel
+            }
+        }
     }
     return api.execute_request(eventsUrl, api_request_object=data, method='POST')
 
+def import_event_data():
+    with open('test_exported_event_info.csv',newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        for row in reader:
+            Id = row['Id']
+            Name = row['Name']
+            Type = row['Type']
+            StartDate = row['StartDate']
+            StartTimeSpecified = row['StartTimeSpecified']
+            EndDate = row['EndDate']
+            EndTimeSpecified = row['EndTimeSpecified']
+            Location = row['Location']
+            RegistrationEnabled = row['RegistrationEnabled']
+            HasEnabledRegistrationTypes = row['HasEnabledRegistrationTypes']
+            AccessLevel = row['AccessLevel']
+            Tags = row['Tags']
+
+            newEvent = Event(Id,Name,Type,StartDate,
+            StartTimeSpecified,EndDate,EndTimeSpecified,
+            Location,RegistrationEnabled,HasEnabledRegistrationTypes,
+            AccessLevel,Tags)
+
+            try: 
+                import_event(newEvent)
+            except Exception as error:
+                print(f"Error occured creating event: {newEvent.Name}. Error: ", error)
+
+
 #Receive same Error 405: Method Not Allowed that receive with import_event()
+
+#### We are totally wrong with the api querry 
+#### Here we need to change our data 
+#### ill let the old data stay so you can compare the changes
 def import_invoice():
     # fieldnames = ['Id', 'Value', 'DocumentDate', 'Contact', 'CreatedDate', 'CreatedBy', 'IsPaid'] <-- from export.py
-    data = {
+    '''data = {
         'Id': 999999,
         'Value': 5.0,
         'DocumentDate': '2022-09-30T03:06:36+00:00',
@@ -166,25 +242,127 @@ def import_invoice():
         'CreatedBy' : "{""Id"": 66133802, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66133802""}",
         'IsPaid' : False
 
-    }
+    }'''
 
+    data = {
+        'Value': 5.0,
+        'DocumentDate': '2022-09-30T03:06:36+00:00',
+        'Contact': {'Id': 66133802},
+        'CreatedDate': '2022-09-27T03:06:36',
+        'CreatedBy' : {'Id': 66226364},
+        'DocumentNumber': 1000,
+        'OrderType':'Undefined',
+        'OrderDetails':[{
+            'Value':5.0,
+            'OrderDetailType':'Unspecified',
+            'Notes':'Import From Api',
+            'Taxes':{
+                'Amount':0,
+                'CalculatedTax1': 0,
+                'CalculatedTax2': 0,
+                'NetAmount': 0,
+                'RoundedAmount': 0,
+                'Tax1': {
+                'Name': 'string',
+                'PublicId': 'string',
+                'Rate': 0
+                },
+                'Tax2': {
+                'Name': 'string',
+                'PublicId': 'string',
+                'Rate': 0
+                }
+            }}],
+        'IsPaid' : False,
+        'Memo':'ok',
+        'PublicMemo':'Nook'
+
+    }
     return api.execute_request(invoicesUrl, api_request_object=data, method='POST')
 
 
-
+#### 
 #Receive same Error 405: Method Not Allowed that receive with import_event() and import_invoice()
+
+#### Again same as above the querry call is wrong ill let 
+#### the old one stay to cross-check what was missing
+#### Also The Donation dosent support Post request
+#### To add new donation
+#### We need to create payment with type of Donation
+#### That will create us new donation
+
 def import_donation():
     # fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName', 'PublicComment', 'Organization']
-    data = {
+    '''data = {
         'Value' : 25.00,
         'DonationDate' : '2022-09-30T03:06:36+00:00',
         'FirstName' : 'Payton',
         'LastName' : 'Ireland',
         'PublicComment' : '',
         'Organization' : ''
+    }'''
+
+    data = {
+        "Value": 10.0,
+        "DocumentDate": "2022-10-24",
+        
+        "Contact": {
+            "Id": 66133802,
+            "Url": "Nothing"
+        },
+        "Comment": "Checking Api Functionality",
+        "PublicComment": "Checking API",
+        # The reason paymentType is DonationPayment
+        # This will make new Donation
+        "PaymentType": "DonationPayment"
     }
 
-    return api.execute_request(donationsUrl, api_request_object=data, method='POST')
+    return api.execute_request(paymentsUrl, api_request_object=data, method='POST')
+
+### it needs to be complete in future your export functions are missing some data like the member id which is needed to create the
+### Donation Contact Field
+def import_donation(donate:Donation):
+    # fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName', 'PublicComment', 'Organization']
+    print("-> Value " + donate.Value)
+    print("-> DocumentDate " + donate.DonationDate)
+    print("-> FirstName " + donate.FirstName)
+    print("-> LastName " + donate.LastName)
+    print("-> PublicComment " + donate.PublicComment)
+    print("-> Organization " + donate.Organization)
+    data = {
+        "Value": donate.Value,
+        "DocumentDate": donate.DonationDate,
+        
+        "Contact": {
+            "Id": 66133802,
+            "Url": "Not Provided",
+            "Name": donate.get_full_name() 
+        },
+        "Comment": "Created From BackEnd",
+        "PublicComment": donate.PublicComment,
+        "PaymentType": "DonationPayment"
+    }
+
+    return api.execute_request(paymentsUrl, api_request_object=data, method='POST')
+
+def import_donation_data():
+    with open('test_exported_donation_info.csv',newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        for row in reader:
+            Value = row['Value']
+            DonationDate = row['DonationDate']
+            FirstName = row['FirstName']
+            LastName = row['LastName']
+            PublicComment = row['PublicComment']
+            Organization = row['Organization']
+
+            newDonation = Donation(Value,DonationDate,FirstName,LastName,PublicComment,Organization)
+
+            try: 
+                import_donation(newDonation)
+            except Exception as error:
+                print(f"Error occured creating event: {newDonation.FirstName} {newDonation.LastName}. Error: ", error)
 
 
 import_member_data()

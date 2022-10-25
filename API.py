@@ -177,6 +177,8 @@ class ApiObject(object):
 
     def __repr__(self):
         return json.dumps(self.__dict__)
+    def toString(self):
+        return self.__dict__
 
 
 class _ApiObjectEncoder(json.JSONEncoder):

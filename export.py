@@ -82,8 +82,10 @@ def get_invoices():
 
 # GET DONATIONS --- IN OTHER FUNCTIONS WE HAVE BEEN ABLE TO REMOVE THE 'TOP' PARAM TO RETRIEVE ALL, 
 #                   HOW WILL THAT WORK HERE?
+
+# Adding End Date Will Fix That ^ 
 def get_donations():
-    params = {'$top': '100'}
+    params = {'EndDate': '2022-10-24'}
     request_url = donationsUrl + '?' + urllib.parse.urlencode(params)
     print(request_url)
     return api.execute_request(request_url)
