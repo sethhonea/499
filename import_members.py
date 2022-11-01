@@ -1,16 +1,4 @@
-# import.py
-# Provides ability to import a member into the database. 
-#
-# Date of Last Change
-# 10/17/2022 - P.Ireland - added comment headers
-# 10/19/2022 - P.Ireland - fixed import for member data, will now import members from test_exported_contact_info.csv
-
-
-from distutils.log import error
-from tarfile import NUL
-from typing import OrderedDict
 import API
-
 import csv
 
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
@@ -24,9 +12,6 @@ print(account.PrimaryDomainName)
 
 ## URLS to retrieve data
 contactsUrl = next(res for res in account.Resources if res.Name == 'Contacts').Url
-eventsUrl = next(res for res in account.Resources if res.Name == 'Events').Url
-invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').Url
-donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
 
 #creating contact class with all fields accessed from export
@@ -62,7 +47,7 @@ class contact():
 # import all member data
 def import_member_data():
     #csv file to read member data from to be imported
-    with open('test_exported_contact_info.csv', newline='') as csvfile:
+    with open('test_exported_members.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         
         #creating a new contact/member with fields from csv file
@@ -115,7 +100,10 @@ def import_member(member:contact):
     #This is read in as a string when reading from the csv file, so we must take a slice of this string
     #to return the id number needed below
     member_level_id = member.MembershipLevel[7:14]
-
+    member_archived = member.Archived
+    member_enabled = True
+    if member_archived:
+        member_enabled = False
     
     data = {
         'Id' : member.Id,
@@ -126,7 +114,7 @@ def import_member(member:contact):
         'MembershipLevel': {
             "Id" : member_level_id           
         },
-        'MembershipEnabled': True,                  
+        'MembershipEnabled': member_enabled,                  
         'Status' : member.Status
         # 'ProfileLastUpdated': member.ProfileLastUpdated, 
         # 'MembershipLevel': member.MembershipLevel, 
@@ -139,54 +127,4 @@ def import_member(member:contact):
 
 
 
-
-# Returns error: Method Not Allowed
-# tried to use datetime object in place of string, but then get error datetime object not JSON serialiazable
-def import_event():
-    #fieldnames = ['Id', 'Name', 'StartDate', 'EndDate', 'Location'] <-- from export.py
-    data = {
-        'Id': 7899465, 
-        'Name': "Test Event", 
-        'StartDate': '2022-12-10T00:00:00+01:00',
-        'EndDate': '2022-12-01T00:00:00+01:00', 
-        'Location': 'Huntsville-Test'
-
-    }
-    return api.execute_request(eventsUrl, api_request_object=data, method='POST')
-
-#Receive same Error 405: Method Not Allowed that receive with import_event()
-def import_invoice():
-    # fieldnames = ['Id', 'Value', 'DocumentDate', 'Contact', 'CreatedDate', 'CreatedBy', 'IsPaid'] <-- from export.py
-    data = {
-        'Id': 999999,
-        'Value': 5.0,
-        'DocumentDate': '2022-09-30T03:06:36+00:00',
-        'Contact': "{""Id"": 66020498, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66020498"", ""Name"": ""Honea, Seth""}",
-        'CreatedDate': '2022-09-27T03:06:36',
-        'CreatedBy' : "{""Id"": 66133802, ""Url"": ""https://api.wildapricot.org/v2/accounts/422750/Contacts/66133802""}",
-        'IsPaid' : False
-
-    }
-
-    return api.execute_request(invoicesUrl, api_request_object=data, method='POST')
-
-
-
-#Receive same Error 405: Method Not Allowed that receive with import_event() and import_invoice()
-def import_donation():
-    # fieldnames = ['Value', 'DonationDate', 'FirstName', 'LastName', 'PublicComment', 'Organization']
-    data = {
-        'Value' : 25.00,
-        'DonationDate' : '2022-09-30T03:06:36+00:00',
-        'FirstName' : 'Payton',
-        'LastName' : 'Ireland',
-        'PublicComment' : '',
-        'Organization' : ''
-    }
-
-    return api.execute_request(donationsUrl, api_request_object=data, method='POST')
-
-
 import_member_data()
-
-

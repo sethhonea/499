@@ -1,0 +1,4 @@
+Id,Name,Type,StartDate,StartTimeSpecified,EndDate,EndTimeSpecified,Location,RegistrationEnabled,HasEnabledRegistrationTypes,AccessLevel,Tags
+4997484,Test Event,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,False,Restricted,['computer science', 'test']
+4997485,Test Event 2,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,False,Restricted,['computer science', 'test']
+4997486,Test Event 3,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,False,Restricted,['computer science', 'test']
