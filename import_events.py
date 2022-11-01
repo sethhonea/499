@@ -1,3 +1,9 @@
+# import_events.py
+# Provides ability to import events into the database.
+#
+# Date of Last Change
+# 11/01/2022 - P.Ireland Created file and added ability to import events into the database
+
 import csv
 import API
 
@@ -11,10 +17,7 @@ account = accounts[0]
 print(account.PrimaryDomainName)
 
 ## URLS to retrieve data
-contactsUrl = next(res for res in account.Resources if res.Name == 'Contacts').Url
 eventsUrl = next(res for res in account.Resources if res.Name == 'Events').Url
-invoicesUrl = next(res for res in account.Resources if res.Name == 'Invoices').Url
-donationsUrl = next(res for res in account.Resources if res.Name == 'Donations').Url
 
 
 #creating event class with all fields accessed from export
@@ -34,12 +37,12 @@ class event():
         self.Tags = Tags
 
 
+#IMPORT EVENTS - import all events located in 'test_exported_events.csv'
 def import_event_data():
     with open('test_exported_events.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
-#Id,Name,Type,StartDate,StartTimeSpecified,EndDate,EndTimeSpecified,Location,RegistrationEnabled,HasEnabledRegistrationTypes,AccessLevel,Tags
-        #creating a new contact/member with fields from csv file
+       #creating an event with fields from csv file
         for row in reader:
             Id = row['Id'],
             Name = row['Name'],
@@ -54,15 +57,18 @@ def import_event_data():
             AccessLevel = row['AccessLevel']
             Tags = row['Tags']
 
+            #creating new event from row in csv
+            #fixed fields as some read in as a list and we only need the first element in the list
             new_event = event(Id[0], Name[0], Type[0], StartDate[0], StartTimeSpec[0], EndDate[0], EndTimeSpec[0], Location[0],
             RegEnabled[0], HasEnabled, AccessLevel, Tags[0])
-            
+
+            #import single event
             import_event(new_event)
 
-
+#IMPORT SINGLE EVENT - called from import_event_data to import single event read in from csv row
 def import_event(event:event):
     data = {
-        #'Id' : event.Id,
+        #'Id' : event.Id,   cannot provide an Id
         'Name' : event.Name,
         'EventType' : event.Type,
         'StartDate' : event.StartDate,
@@ -78,4 +84,5 @@ def import_event(event:event):
 
 
 
+#calling function to import events
 import_event_data()
