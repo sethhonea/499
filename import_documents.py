@@ -30,7 +30,7 @@ def import_document():
         'StartTimeSpecified' : False,
         'EndDate': '2022-11-08',
         'EndTimeSpecified' : False,
-        'Location' : 'Test Upload',
+        'Location' : 'Upload',
         'RegistrationEnabled' : True,
         'Tags' : text
         }

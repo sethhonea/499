@@ -265,6 +265,11 @@ def export_event_info(events):
         thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
         thewriter.writeheader()
         for event in events:
+            ## *****************************
+            # will need to update if clause to account for all uploaded document names
+            if event.Name == "DDD Draft Document Upload Test":
+                export_document_event(event)
+                continue
             thewriter.writerow({
                 'Id': event.Id, 
                 'Name': event.Name, 
@@ -334,6 +339,18 @@ def export_donation_info(donations):
 
 
 
+# EXPORT EVENT INFO - write each event in events to csv file as a row
+def export_document_event(doc_event):
+    filename = doc_event.Name + '.txt'
+    
+    with open(filename, 'w') as file:
+        text = doc_event.Tags
+        for string in text:
+            file.write(string)
+        
+    
+
+
 # CALLING FUNCTIONS TO RETRIEVE DATA, PRINT DATA, AND/OR EXPORT DATA
 #---------------------------------------------------------------------------------------------------------
 
@@ -361,6 +378,7 @@ export_donation_info(donations)
 # EXPORT INVOICES
 invoices = get_invoices()
 export_invoice_info(invoices)
+
 
 
 
