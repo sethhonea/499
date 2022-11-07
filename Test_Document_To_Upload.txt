@@ -1,0 +1,46 @@
+The American Women’s Group in Paris was first organized in 1921. The purposes are to assist American women living or visiting in France, to foster good connections between American women and women from nations allied with the United States during World War I, to provide a center for social and educational activity, and to promote American charity. It has become an essential component of American life in Paris. (Cathy Farnams 2019)
+
+For this project, all past and current member contact, activity, financial and charitable data are maintained in the database. No documentation currently exists for the database. The project's duties include reverse engineering application documentation, offering new database functionality, prototyping user interface modifications, and compiling national data privacy requirements applicable to the geographical location of the program's users and their data.
+1.2 Scope, Approach, and Methods 
+The software should allow users to import and export member, event, and financial data. Wild Apricot is used to build the user interface. Menus, buttons, links, photos, and text will all be present. Authorized applications can use Wild Apricot's API to access their database. Users can make blog posts that are viewable in public and private domains.
+
+The backend team selected Python to interact with WildApricot’s API. Python will be used to connect to the database and interact with it using queries. DrawSQL will be used to create any Entity Relationship diagram about this project. GitHub will be used to collaborate code with a common repository among backend group members. 
+1.3 System Overview 
+Wild Apricot is a commercial off-the-shelf database tool used for membership management. All parts of the website are stored in the database, such as web pages, GUI, and system files in addition to member information. For this project, the database has been divided into system data and working data. Wild Apricot's database can be accessed by their API through an authorized application. 
+
+
+
+2 System Overview 
+2.1 System Information  
+WildApricot is a commercial off-the-shelf cloud-based membership management system. The database holds all information about the website including web pages, GUI, system files, event information, and membership information. The data within the database can be divided into two categories: working data and system data. The working data consists of the member, event, and financial data. The system data is all of the system files for the website. The database can be accessed using their API through an authorized application. 
+2.1.1 Database Management System Configuration  
+At this time it is unknown what type of database is being used by WildApricot. There is limited documentation available and it is not stated what type of database WildApricot selected for their application. 
+2.1.2 Database Software Utilities  
+WildApricot provides two APIs to interact with the database. The member API allows users to create applications for members while the admin API allows administrators to retrieve and update data stored within the database. This project will use the admin API as this project is focused on exporting and importing data. Python was selected to interact with the API to create scripts for exporting and importing data.
+
+3 Database Design Decisions  
+3.1 Assumptions  
+It is assumed that the cloned database being used for this project is representative of the actual database that contains real-world information. The cloned database holds significantly less information so this assumption may have negative implications for this project.
+3.2 Issues
+The critical issues for this project are working with a cloned database and the lack of documentation. The cloned database may not be representative of actual data and this could lead to issues, such as performance and scaling. The lack of documentation is also a problem because nothing is known about the design of the database. Without knowing the design, it will be difficult to predict what data is accessible and how it is stored. 
+3.3 Constraints 
+The main constraints for this project are being limited by WildApricot’s capabilities as well as by the lack of documentation. Without the documentation, it is hard to know the full capabilities of WildApricot. WildApricot does have an Application Programming Interface (API) to interact with the database, however, the team is limited to only using API-provided function calls to access the database. The API does not provide any calls to access system files and therefore system data is not retrievable. Time is also a contributing factor as this team and this project are constrained by the length of the semester. 
+4 Database Administrative Functions 
+4.1 Schema Information  
+The ERD shown below is the Working Data that the team can currently access with the API. 
+
+5 Data Access  
+5.1 Role Definitions  
+WildApricot supplies various access roles for members. An account administrator may be granted full access or have read-only access. Full-access administrators can delete other administrators and even the entire website. Read-only administrators can view everything in the administrator backend without being able to make any changes. Limited administrators have specific privileges that are relevant to their role. There are several types of limited administrators including membership managers, event managers, donations managers, newsletter managers, online store managers, and website editors. Administrators can also have their access revoked. Regular members do not have administrative privileges but can access some parts of the database to retrieve information. 
+5.2 Users  
+A public user does not have an account and also does not have access to the database. A member has access to an account with restricted access to the database. An administrator is a member account user with special administrative privileges. There are various types of administrators as listed above. 
+
+6 Non-Functional Design 
+6.1 Security Design  
+Administrative users are granted access to all member, event, and financial data but do not have access to system files. This is likely done for security purposes.
+6.2 Availability  
+The available data that can be accessed is limited to the provided API calls. WildApircot’s API does not provide any calls for accessing system files. The most readily available data to manipulate is member, event, donation, and invoice data. However, donations can not be imported into the database as the API does not provide a ‘POST’ method. 
+6.3 Backups and Recovery 
+The website currently has limited export and import capabilities concerning the database. There is a limited amount of information available to export, thus there is limited information available to backup. This project will expand on the information available to export and import so that a more complete backup is possible. Adding this functionality will help in recovery efforts. 
+6.4 Archiving
+The website, based on our research and observations, denotes archived data as any data that is old such as past members or events. This archived field is a boolean field that is set to true for any data that is to be archived. 

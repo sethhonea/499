@@ -74,6 +74,7 @@ def import_member_data():
             Email_delivery_disabled = row['Email delivery disabled'],
             Receiving_emails_disabled = row['Receiving emails disabled'] 
             
+            
             #creating the contact/member
             newContact = contact(DisplayName[0], Id[0], Url[0], FirstName[0], LastName[0], Organization[0], Email[0], 
                                 ProfileLastUpdated[0], MembershipLevel[0], Status[0], IsAccountAdministrator[0], TermsOfUseAccepted[0], Archived[0],
@@ -105,6 +106,7 @@ def import_member(member:contact):
     if member_archived:
         member_enabled = False
     
+
     data = {
         'Id' : member.Id,
         'FirstName': member.FirstName, 
