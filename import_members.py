@@ -1,3 +1,11 @@
+# Provies the ability to import members into the databae. Multiple
+# members may not have the same email address - this causes 
+# members already in the database to not be uploaded. Any member
+# that is not imported will display an error message in the terminal
+# stating the member was not imported. 
+
+# Created by: Backend Team (Payton Ireland, Seth Honea, Juliet Awoyale)
+
 import API
 import csv
 
