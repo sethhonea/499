@@ -1,6 +1,7 @@
 # import_events.py
 # Provides ability to import events into the database.
 #
+# Created by: Backend Team (Payton Ireland, Seth Honea, Juliet Awoyale)
 # Date of Last Change
 # 11/01/2022 - P.Ireland Created file and added ability to import events into the database
 

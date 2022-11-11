@@ -1,7 +1,0 @@
-Id,Name,Type,StartDate,StartTimeSpecified,EndDate,EndTimeSpecified,Location,RegistrationEnabled,HasEnabledRegistrationTypes,AccessLevel,Tags
-5034552,Test Event,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,True,AdminOnly,[]
-5034554,Test Event 2,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,True,AdminOnly,[]
-5034555,Test Event 3,Rsvp,2022-12-01T10:00:00+01:00,True,2022-12-02T15:00:00+01:00,True,Paris,True,True,AdminOnly,[]
-4985839,Test Event for API :),Rsvp,2022-12-01T00:00:00+01:00,False,2022-12-25T00:00:00+01:00,False,Rocket City,True,True,Restricted,[]
-5019746,Created From BackEnd,Rsvp,2022-11-19T18:00:00+01:00,True,2022-11-21T04:00:00+01:00,True,Hawaii,True,True,Restricted,[]
-4997464,CS Party,Rsvp,2022-11-01T10:00:00+01:00,True,2022-11-02T15:00:00+01:00,True,Paris,True,False,Public,['computer science']

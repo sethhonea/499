@@ -1,6 +1,8 @@
 # import_events.py
 # Provides ability to import invoices into the database.
-#
+
+# Created by: Backend Team (Payton Ireland, Seth Honea, Juliet Awoyale)
+
 # Date of Last Change
 # 11/01/2022 - P.Ireland Created file and added functions to import invoices - not currently functional. 
 

@@ -1,9 +1,16 @@
+# This script is designed to export test documents from the database. 
+# These documents were uploaded as events. In this example, we are 
+# exporting an event titled DDD Draft that was uploaded using the import_documents.py
+# script. 
+
+# Created by: Backend Team (Payton Ireland, Seth Honea, Juliet Awoyale)
+
+
 
 from tarfile import NUL
 import API
 import urllib.parse
 import csv
-
 
 
 
@@ -59,7 +66,7 @@ def export_documents(events):
             ## *****************************
             # UPDATE below with your doucment title/name used in import_documents.py -- MUST MATCH EXACTLY
             ## *****************************
-            if event.Name == "DDD Draft Document Upload Test":
+            if event.Name == "DDD Draft":
                 export_document_event(event)
                 continue
             
@@ -73,7 +80,6 @@ def export_document_event(doc_event):
     #open the file and write all of the document located in Tags field
     with open(filename, 'w') as file:
         text = doc_event.Tags
-        #Tags is list of strings, so have to write for each string in the text list
         for string in text:
             file.write(string)
         

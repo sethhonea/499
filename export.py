@@ -1,7 +1,9 @@
 # Export.py
 # Provides ability to export active member data, archived member data, 
 # event data, invoice data, and donation data as separate csv files. 
-#
+
+# Created by: Backend Team (Payton Ireland, Seth Honea, Juliet Awoyale)
+
 # Date of Last Change
 # 10/17/2022 - P.Ireland - added comment headers
 # 11/01/2022 - P.Ireland - cleaned code by removing extraneous comments
