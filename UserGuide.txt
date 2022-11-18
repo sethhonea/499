@@ -1,0 +1,68 @@
+User Guide
+
+Build 2
+19 NOVEMBER, 2022
+
+Prepared by: CS 499-02
+
+
+Prepared for: The American’s Women Group in Paris
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To Create an Authorized Application:
+
+1. LogIn as an administrative user
+2. In the sidebar menu, select Settings
+
+3. In Settings, select Authorized Applications
+
+4. At the top of the screen, click “Authorize Application” to create a new authorized application. 
+5. Select the type of authorized application, then click “Continue”.
+
+6. Enter the application name and select the level of access for the application.
+7. If no Client Secret is displayed, click “Generate Client Secret”. 
+8. Note that the Client Secret and API key shown on this screen will be needed when writing scripts to interact with the database. 
+9. Click “Save” at the top of the screen. 
+
+
+Clone the GitHub repository at https://github.com/sethhonea/499 before proceeding to the next section.
+1. Navigate to the URL above.
+2. Select the <> Code button to view a drop-down list of clone options.
+3. Select one of the options to clone the repository to your local computer.
+4. Open the directory containing the cloned files for the remaining steps below.
+
+
+Export Data:
+1. In export.py, look for the following two lines:
+2. Replace these strings with your API Key/Client ID, Client Secret, username, and password.
+3. Run export.py
+4. Members, archived members, events, donations, and invoices will be exported into your local project directory as csv files. 
+
+
+Import Data:
+1. In import_members.py and import_events.py, look for the following two lines:
+2. Replace these strings with your API Key/Client ID, Client Secret, username, and password in each of the files. 
+3. Run import_members.py
+a. Members located in the test_exported_members.csv will be added to the database if they do not already exist. If using a different file to upload members, please change the filename located in line 58 and format the file to be the same as test_exported_members.csv. 
+4. Run import_events.py
+a. All events located in the test_exported_events.csv will be added to the database. If using a different file to upload events, change the filename located in line 43 and format the file to be the same as test_exported_events.csv. 
+
+
+
+
+
+
+

@@ -35,7 +35,7 @@ def import_document(filename, name_event):
     #************************************
     # CHANGE DETAILS BELOW: file name with extension of document wanting to upload
     #************************************
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding='utf-8') as file:
         text = file.readlines()
     #************************************
     # CHANGE DETAILS BELOW: Name (may change start/end date if needed)
@@ -57,4 +57,4 @@ def import_document(filename, name_event):
 
 
 #calling function to import the document into the database
-import_document("DDD_Draft_Upload.txt", "DDD Draft")
+import_document("UserGuide.txt", "User Guide")
