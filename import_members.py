@@ -116,7 +116,7 @@ def import_member(member:contact):
     
 
     data = {
-        'Id' : member.Id,
+        #'Id' : member.Id,
         'FirstName': member.FirstName, 
         'LastName': member.LastName, 
         'Organization': member.Organization,
